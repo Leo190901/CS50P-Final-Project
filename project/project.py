@@ -21,6 +21,7 @@ def create_new_passwd():
     specs = get_passwd_specifications()
     print()
     print_specs(specs)
+    print()
 
     if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
         userName = input("Enter username: ")
@@ -76,7 +77,29 @@ def print_specs(specs):
 
 
 def generate_random_password(specs):
-    pass
+    upperLetters = ["A", "B", "C", "D"]
+    lowerLetters = ["a", "b", "c", "d"]
+    numbers = ["0", "1", "2", "3"]
+    specials = ["#", "!", "&", "$"]
+
+    apply = []
+    if specs["lower"]:
+        apply.append(lowerLetters)
+    if specs["upper"]:
+        apply.append(upperLetters)
+    if specs["num"]:
+        apply.append(numbers)
+    if specs["special"]:
+        apply.append(specials)
+
+    passwd = ""
+    for _ in range(specs["len"]):
+        typeChoice = random.choice(apply)
+        c = random.choice(typeChoice)
+        passwd = passwd + c
+
+    return passwd
 
 
-main()
+if __name__ == '__main__':
+    main()

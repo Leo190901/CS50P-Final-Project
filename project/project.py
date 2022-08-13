@@ -20,15 +20,16 @@ def create_new_passwd():
 
     specs = get_passwd_specifications()
     print()
+    print_specs(specs)
 
-    print("These are your chosen specifications:")
-    print(f'Lowercase letters: {specs["lower"]}')
-    print(f'Uppercase letters: {specs["upper"]}')
-    print(f'Numbers: {specs["num"]}')
-    print(f'Special Characters: {specs["special"]}')
-    print(f'Length: {specs["len"]}')
+    if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
+        userName = input("Enter username: ")
+    else:
+        userName = ""
 
     passwd = generate_random_password(specs)
+
+    applications[appName] = {"username": userName, "password": passwd}
 
 
 def get_passwd_specifications():
@@ -52,7 +53,7 @@ def get_passwd_specifications():
 
     while True:
         len = int(input(
-            "What length should your password have?(maximal length is 100 characters)"))
+            "What length should your password have (maximal length is 100 characters)? "))
         try:
             if len < 1 or len > 100:
                 print("Invalid length!")
@@ -63,6 +64,15 @@ def get_passwd_specifications():
             print("Please enter a number!")
 
     return specs
+
+
+def print_specs(specs):
+    print("These are your chosen specifications:")
+    print(f'Lowercase letters: {specs["lower"]}')
+    print(f'Uppercase letters: {specs["upper"]}')
+    print(f'Numbers: {specs["num"]}')
+    print(f'Special Characters: {specs["special"]}')
+    print(f'Length: {specs["len"]}')
 
 
 def generate_random_password(specs):

@@ -1,16 +1,39 @@
 import random
+import sys
 
 applications = {}
 
 
 def main():
     random.seed()
-    print("##################################################")
-    print("###########  Secure Password Manager   ###########")
-    print("##################################################")
+    print("####################################################################################")
+    print("#############################  Secure Password Manager   ###########################")
+    print("####################################################################################")
     print()
 
-    create_new_passwd()
+    while True:
+        print("1. Display all your passwords.")
+        print("2. Create new entry.")
+        #print("3. View Statistics TODO")
+        #print("4. Wipe entry TODO")
+        print("3. Exit")
+        print()
+        action = int(input("What would you like to do? "))
+        print()
+
+        match action:
+            case 1:
+                display_passwords()
+            case 2:
+                create_new_passwd()
+            case 3:
+                sys.exit()
+
+
+def display_passwords():
+    for app in applications:
+        print(
+            f'{app}: username: {app["username"]}  password: {app["password"]}')
 
 
 def create_new_passwd():
@@ -77,10 +100,12 @@ def print_specs(specs):
 
 
 def generate_random_password(specs):
-    upperLetters = ["A", "B", "C", "D"]
-    lowerLetters = ["a", "b", "c", "d"]
-    numbers = ["0", "1", "2", "3"]
-    specials = ["#", "!", "&", "$"]
+    upperLetters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+                    "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+    lowerLetters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l",
+                    "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+    numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    specials = ["#", "!", "&", "$", "?", "§", "%", "/", "(", ")", "="]
 
     apply = []
     if specs["lower"]:
@@ -96,7 +121,7 @@ def generate_random_password(specs):
     for _ in range(specs["len"]):
         typeChoice = random.choice(apply)
         c = random.choice(typeChoice)
-        passwd = passwd + c
+        passwd = passwd + str(c)
 
     return passwd
 

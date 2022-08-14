@@ -1,44 +1,53 @@
 import random
 import sys
+from tabulate import tabulate
 
 applications = {}
 
 
 def main():
     random.seed()
-    print("##################################################################################")
-    print("###########################  Secure Password Manager   ###########################")
-    print("##################################################################################")
-    print()
-
+    display_start_screen()
     while True:
-        print("----------------------------------------------------------------------------------")
-        print("1. Display all your passwords.")
-        print("2. Create new entry.")
-        #print("3. View Statistics TODO")
-        #print("4. Wipe entry TODO")
-        print("3. Exit")
-        print("----------------------------------------------------------------------------------")
-        print()
+        display_options()
         action = int(input("What would you like to do? "))
         print()
-
         match action:
             case 1:
-                # display_passwords()
-                for app, info in applications.items():
-                    print(
-                        f'{app}: username: {info["username"]} password: {info["password"]}')
+                display_passwords()
             case 2:
                 create_new_passwd()
             case 3:
                 sys.exit()
 
 
+def display_start_screen():
+    print("##################################################################################")
+    print("###########################  Secure Password Manager   ###########################")
+    print("##################################################################################")
+    print()
+
+
+def display_options():
+    print("----------------------------------------------------------------------------------")
+    print("1. Display all your passwords.")
+    print("2. Create new entry.")
+    #print("3. View Statistics TODO")
+    #print("4. Wipe entry TODO")
+    print("3. Exit")
+    print("----------------------------------------------------------------------------------")
+    print()
+
+
+def load_passwords():
+    pass
+    # TODO
+
+
 def display_passwords():
-    for app, info in applications.items():
-        print(
-            f'{app}: username: {info["username"]} password: {info["password"]}')
+    col_names = ["App", "Username", "Password"]
+    values = [[name, *inner.values()] for name, inner in applications.items()]
+    print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
 
 
 def create_new_passwd():

@@ -6,24 +6,29 @@ applications = {}
 
 def main():
     random.seed()
-    print("####################################################################################")
-    print("#############################  Secure Password Manager   ###########################")
-    print("####################################################################################")
+    print("##################################################################################")
+    print("###########################  Secure Password Manager   ###########################")
+    print("##################################################################################")
     print()
 
     while True:
+        print("----------------------------------------------------------------------------------")
         print("1. Display all your passwords.")
         print("2. Create new entry.")
         #print("3. View Statistics TODO")
         #print("4. Wipe entry TODO")
         print("3. Exit")
+        print("----------------------------------------------------------------------------------")
         print()
         action = int(input("What would you like to do? "))
         print()
 
         match action:
             case 1:
-                display_passwords()
+                # display_passwords()
+                for app, info in applications.items():
+                    print(
+                        f'{app}: username: {info["username"]} password: {info["password"]}')
             case 2:
                 create_new_passwd()
             case 3:
@@ -31,9 +36,9 @@ def main():
 
 
 def display_passwords():
-    for app in applications:
+    for app, info in applications.items():
         print(
-            f'{app}: username: {app["username"]}  password: {app["password"]}')
+            f'{app}: username: {info["username"]} password: {info["password"]}')
 
 
 def create_new_passwd():

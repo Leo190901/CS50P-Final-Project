@@ -48,11 +48,13 @@ def load_passwords():
     with open('passwords.csv') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
+            print(row)
             applications[row[0]] = {"username": row[1], "password": row[2]}
 
 
 def display_passwords():
     col_names = ["App", "Username", "Password"]
+    print(applications)
     values = [[name, *inner.values()] for name, inner in applications.items()]
     print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
 
@@ -76,10 +78,8 @@ def create_new_passwd():
 
     applications[appName] = {"username": userName, "password": passwd}
     #fieldNames = ["App", "Username", "Password"]
-    values = [[name, *inner.values()]
-              for name, inner in applications.items()][0]
-    print(values)
-    with open('passwords.csv', 'w') as csvfile:
+    values = [appName, userName, passwd]
+    with open('passwords.csv', 'a') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(values)
 

@@ -1,5 +1,6 @@
 import random
 import sys
+import csv
 from tabulate import tabulate
 
 applications = {}
@@ -7,6 +8,10 @@ applications = {}
 
 def main():
     random.seed()
+    try:
+        load_passwords()
+    except:
+        pass
     display_start_screen()
     while True:
         display_options()
@@ -40,8 +45,10 @@ def display_options():
 
 
 def load_passwords():
-    pass
-    # TODO
+    with open('passwords.csv') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            applications[row[0]] = {"username": row[1], "password": row[2]}
 
 
 def display_passwords():
@@ -68,6 +75,13 @@ def create_new_passwd():
     passwd = generate_random_password(specs)
 
     applications[appName] = {"username": userName, "password": passwd}
+    #fieldNames = ["App", "Username", "Password"]
+    values = [[name, *inner.values()]
+              for name, inner in applications.items()][0]
+    print(values)
+    with open('passwords.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(values)
 
 
 def get_passwd_specifications():

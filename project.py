@@ -30,7 +30,7 @@ def main():
 
 def display_start_screen():
     print("##################################################################################")
-    print("###########################  Secure Password Manager   ###########################")
+    print("###############################  Password Manager   ##############################")
     print("##################################################################################")
     print()
 
@@ -57,6 +57,7 @@ def display_passwords():
     col_names = ["App", "Username", "Password"]
     values = [[name, *inner.values()] for name, inner in applications.items()]
     print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
+    print()
 
 
 def create_new_passwd():

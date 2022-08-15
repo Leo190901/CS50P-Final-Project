@@ -23,6 +23,8 @@ def main():
             case 2:
                 create_new_passwd()
             case 3:
+                wipe()
+            case 4:
                 sys.exit()
 
 
@@ -37,9 +39,9 @@ def display_options():
     print("----------------------------------------------------------------------------------")
     print("1. Display all your passwords.")
     print("2. Create new entry.")
-    #print("3. View Statistics TODO")
-    #print("4. Wipe entry TODO")
-    print("3. Exit")
+    # print("#. View Statistics TODO")
+    print("3. Wipe all entries")
+    print("4. Exit")
     print("----------------------------------------------------------------------------------")
     print()
 
@@ -150,6 +152,13 @@ def generate_random_password(specs):
         passwd = passwd + str(c)
 
     return passwd
+
+
+def wipe():
+    with open('passwords.csv', 'w',  newline='\n', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow('')
+    applications.clear()
 
 
 if __name__ == '__main__':

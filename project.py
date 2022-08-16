@@ -2,14 +2,17 @@ import random
 import sys
 import csv
 from tabulate import tabulate
+from cryptography.fernet import Fernet
 
 applications = {}
 
 
 def main():
     random.seed()
+    generate_key()
     try:
         load_passwords()
+        print(applications)
     except:
         pass
     display_start_screen()
@@ -39,7 +42,6 @@ def display_options():
     print("----------------------------------------------------------------------------------")
     print("1. Display all your passwords.")
     print("2. Create new entry.")
-    # print("#. View Statistics TODO")
     print("3. Wipe all entries")
     print("4. Exit")
     print("----------------------------------------------------------------------------------")
@@ -48,9 +50,29 @@ def display_options():
 
 def load_passwords():
     with open('passwords.csv') as csvfile:
+        key = load_key()
+        f = Fernet(key)
         reader = csv.reader(csvfile)
         for row in reader:
-            applications[row[0]] = {"username": row[1], "password": row[2]}
+            tmp = f.decrypt(row[2])
+            pw = tmp.decode()
+            applications[row[0]] = {"username": row[1], "password": pw}
+
+
+def generate_key():
+    """
+    Generates a key and save it into a file
+    """
+    key = Fernet.generate_key()
+    with open("secret.key", "wb") as key_file:
+        key_file.write(key)
+
+
+def load_key():
+    """
+    Load the previously generated key
+    """
+    return open("secret.key", "rb").read()
 
 
 def display_passwords():
@@ -65,21 +87,27 @@ def create_new_passwd():
         "What is the name of the application for which your are creating this password?")
     print()
 
-    specs = get_passwd_specifications()
-    print()
-    print_specs(specs)
-    print()
+    if input("Would you like to enter a password manually?[y/n] ").lower() == "y":
+        passwd = input("Enter Password: ")
+    else:
+        specs = get_passwd_specifications()
+        print()
+        print_specs(specs)
+        print()
+        passwd = generate_random_password(specs)
 
     if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
         userName = input("Enter username: ")
     else:
         userName = ""
 
-    passwd = generate_random_password(specs)
+    key = load_key()
+    f = Fernet(key)
+    encodedPW = passwd.encode()
+    enryptedPasswd = f.encrypt(encodedPW)
 
     applications[appName] = {"username": userName, "password": passwd}
-    #fieldNames = ["App", "Username", "Password"]
-    values = [appName, userName, passwd]
+    values = [appName, userName, enryptedPasswd]
     with open('passwords.csv', 'a',  newline='\n', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(values)

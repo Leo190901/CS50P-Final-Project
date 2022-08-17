@@ -6,7 +6,6 @@ from tabulate import tabulate
 from cryptography.fernet import Fernet
 
 applications = {}
-rows = []
 
 
 def main():
@@ -66,13 +65,6 @@ def load_passwords():
             pwE = f.decrypt(tmp)
             pw = pwE.decode()
             applications[row[0]]["password"] = pw
-
-
-def decrypt_passwords():
-    for row in rows:
-        tmp = row[2].encode()
-        pw = f.decrypt(tmp)
-        print(pw)
 
 
 def generate_key():

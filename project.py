@@ -1,18 +1,26 @@
 import random
 import sys
 import csv
+import os
 from tabulate import tabulate
 from cryptography.fernet import Fernet
 
 applications = {}
+rows = []
 
 
 def main():
     random.seed()
-    generate_key()
+    if not os.path.exists("secret.key") or os.stat("secret.key").st_size == 0:
+        generate_key()
+    else:
+        pass
+    global key
+    key = load_key()
+    global f
+    f = Fernet(key)
     try:
         load_passwords()
-        print(applications)
     except:
         pass
     display_start_screen()
@@ -50,13 +58,21 @@ def display_options():
 
 def load_passwords():
     with open('passwords.csv') as csvfile:
-        key = load_key()
-        f = Fernet(key)
         reader = csv.reader(csvfile)
         for row in reader:
-            tmp = f.decrypt(row[2])
-            pw = tmp.decode()
-            applications[row[0]] = {"username": row[1], "password": pw}
+            applications[row[0]] = {"username": row[1],
+                                    "password": row[2]}
+            tmp = row[2].encode()
+            pwE = f.decrypt(tmp)
+            pw = pwE.decode()
+            applications[row[0]]["password"] = pw
+
+
+def decrypt_passwords():
+    for row in rows:
+        tmp = row[2].encode()
+        pw = f.decrypt(tmp)
+        print(pw)
 
 
 def generate_key():
@@ -79,7 +95,6 @@ def display_passwords():
     col_names = ["App", "Username", "Password"]
     values = [[name, *inner.values()] for name, inner in applications.items()]
     print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
-    print()
 
 
 def create_new_passwd():
@@ -101,10 +116,11 @@ def create_new_passwd():
     else:
         userName = ""
 
-    key = load_key()
-    f = Fernet(key)
     encodedPW = passwd.encode()
-    enryptedPasswd = f.encrypt(encodedPW)
+    enryptedPasswd = f.encrypt(encodedPW).decode()
+
+    pw = f.decrypt(enryptedPasswd.encode())
+    print(pw)
 
     applications[appName] = {"username": userName, "password": passwd}
     values = [appName, userName, enryptedPasswd]

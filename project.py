@@ -68,18 +68,12 @@ def load_passwords():
 
 
 def generate_key():
-    """
-    Generates a key and save it into a file
-    """
     key = Fernet.generate_key()
     with open("secret.key", "wb") as key_file:
         key_file.write(key)
 
 
 def load_key():
-    """
-    Load the previously generated key
-    """
     return open("secret.key", "rb").read()
 
 
@@ -121,28 +115,50 @@ def create_new_passwd():
         writer.writerow(values)
 
 
-def get_passwd_specifications():
+def get_passwd_specifications(answers):
     specs = {}
-    if input("Do you want your Password to contain numbers?[y/n] ").lower() == "y":
-        specs["num"] = True
+
+    if not answers:
+        if input("Do you want your Password to contain numbers?[y/n] ").lower() == "y":
+            specs["num"] = True
+        else:
+            specs["num"] = False
+        if input("Do you want your Password to contain lowercase letters?[y/n] ").lower() == "y":
+            specs["lower"] = True
+        else:
+            specs["lower"] = False
+        if input("Do you want your Password to contain uppercase letters?[y/n] ").lower() == "y":
+            specs["upper"] = True
+        else:
+            specs["upper"] = False
+        if input("Do you want your Password to contain special characters?[y/n] ").lower() == "y":
+            specs["special"] = True
+        else:
+            specs["special"] = False
     else:
-        specs["num"] = False
-    if input("Do you want your Password to contain lowercase letters?[y/n] ").lower() == "y":
-        specs["lower"] = True
-    else:
-        specs["lower"] = False
-    if input("Do you want your Password to contain uppercase letters?[y/n] ").lower() == "y":
-        specs["upper"] = True
-    else:
-        specs["upper"] = False
-    if input("Do you want your Password to contain special characters?[y/n] ").lower() == "y":
-        specs["special"] = True
-    else:
-        specs["special"] = False
+        if list(answers)[0] == "y":
+            specs["num"] = True
+        else:
+            specs["num"] = False
+        if list(answers)[1] == "y":
+            specs["lower"] = True
+        else:
+            specs["lower"] = False
+        if list(answers)[2] == "y":
+            specs["upper"] = True
+        else:
+            specs["upper"] = False
+        if list(answers)[3] == "y":
+            specs["special"] = True
+        else:
+            specs["special"] = False
 
     while True:
-        len = int(input(
-            "What length should your password have (maximal length is 100 characters)? "))
+        if not answers:
+            len = int(input(
+                "What length should your password have (maximal length is 100 characters)? "))
+        else:
+            len = answers[4]
         try:
             if len < 1 or len > 100:
                 print("Invalid length!")
@@ -196,6 +212,8 @@ def wipe():
         writer = csv.writer(csvfile)
         writer.writerow('')
     applications.clear()
+
+    return applications
 
 
 if __name__ == '__main__':

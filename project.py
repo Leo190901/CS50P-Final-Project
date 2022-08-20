@@ -18,23 +18,22 @@ def main():
     key = load_key()
     global f
     f = Fernet(key)
-    try:
-        load_passwords()
-    except:
-        pass
     display_start_screen()
+    display_options()
     while True:
-        display_options()
-        action = int(input("What would you like to do? "))
+        # display_options()
+        action = input("What would you like to do? ")
         print()
         match action:
-            case 1:
+            case '1':
+                load_passwords()
+            case '2':
                 display_passwords()
-            case 2:
+            case '3':
                 create_new_passwd()
-            case 3:
+            case '4':
                 wipe()
-            case 4:
+            case 'q':
                 sys.exit()
 
 
@@ -47,24 +46,37 @@ def display_start_screen():
 
 def display_options():
     print("----------------------------------------------------------------------------------")
-    print("1. Display all your passwords.")
-    print("2. Create new entry.")
-    print("3. Wipe all entries")
-    print("4. Exit")
+    print("[1] Load passwords from csv file")
+    print("[2] Display all your passwords.")
+    print("[3] Create new entry.")
+    print("[4] Wipe all entries")
+    print("[q] Exit")
     print("----------------------------------------------------------------------------------")
     print()
 
 
 def load_passwords():
-    with open('passwords.csv') as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            applications[row[0]] = {"username": row[1],
-                                    "password": row[2]}
-            tmp = row[2].encode()
-            pwE = f.decrypt(tmp)
-            pw = pwE.decode()
-            applications[row[0]]["password"] = pw
+    print()
+    fileName = input(
+        "What is the name of the file in which your passwords are stored? ")
+    i = 0
+    try:
+        with open(fileName) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                applications[row[0]] = {"username": row[1],
+                                        "password": row[2]}
+                tmp = row[2].encode()
+                pwE = f.decrypt(tmp)
+                pw = pwE.decode()
+                applications[row[0]]["password"] = pw
+                i += 1
+            if i == 1:
+                print(f"Loaded {i} entry.")
+            else:
+                print(f"Loaded {i} entries.")
+    except:
+        print("Error: Could not load passwords.")
 
 
 def generate_key():
@@ -108,9 +120,12 @@ def create_new_passwd():
     pw = f.decrypt(enryptedPasswd.encode())
     print(pw)
 
+    print()
+    fileName = input("Specify name of password file: ")
+
     applications[appName] = {"username": userName, "password": passwd}
     values = [appName, userName, enryptedPasswd]
-    with open('passwords.csv', 'a',  newline='\n', encoding='utf-8') as csvfile:
+    with open(fileName, 'a',  newline='\n', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(values)
 

@@ -1,4 +1,6 @@
-from project import generate_random_password, get_passwd_specifications, wipe
+from project import generate_random_password, get_passwd_specifications, wipe, load_passwords, create_new_passwd, load_key
+from cryptography.fernet import Fernet
+import os
 
 
 def test_generate_random_password():
@@ -33,3 +35,13 @@ def test_get_passwd_specifications2():
 
 def test_wipe():
     assert bool(wipe()) == False
+
+
+def test_load_passwd():
+    create_new_passwd("instagram", "+example123+", "leon", "test.csv")
+    applications = load_passwords("test.csv")
+
+    assert applications["instagram"]["password"] == "+example123+"
+    assert applications["instagram"]["username"] == "leon"
+
+    os.remove("test.csv")

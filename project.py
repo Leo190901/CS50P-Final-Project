@@ -55,10 +55,13 @@ def display_options():
     print()
 
 
-def load_passwords():
-    print()
-    fileName = input(
-        "What is the name of the file in which your passwords are stored? ")
+def load_passwords(fileName=""):
+    key = load_key()
+    f = Fernet(key)
+    if fileName == "":
+        print()
+        fileName = input(
+            "What is the name of the file in which your passwords are stored? ")
     i = 0
     try:
         with open(fileName) as csvfile:
@@ -78,6 +81,8 @@ def load_passwords():
     except:
         print("Error: Could not load passwords.")
 
+    return applications
+
 
 def generate_key():
     key = Fernet.generate_key()
@@ -95,33 +100,38 @@ def display_passwords():
     print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
 
 
-def create_new_passwd():
-    appName = input(
-        "What is the name of the application for which your are creating this password?")
-    print()
-
-    if input("Would you like to enter a password manually?[y/n] ").lower() == "y":
-        passwd = input("Enter Password: ")
-    else:
-        specs = get_passwd_specifications()
+def create_new_passwd(appName="", passwd="", userName="", fileName=""):
+    if appName == "":
+        appName = input(
+            "What is the name of the application for which your are creating this password?")
         print()
-        print_specs(specs)
-        print()
-        passwd = generate_random_password(specs)
 
-    if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
-        userName = input("Enter username: ")
-    else:
-        userName = ""
+    if passwd == "":
+        if input("Would you like to enter a password manually?[y/n] ").lower() == "y":
+            passwd = input("Enter Password: ")
+        else:
+            specs = get_passwd_specifications()
+            print()
+            print_specs(specs)
+            print()
+            passwd = generate_random_password(specs)
+
+    if userName == "":
+        if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
+            userName = input("Enter username: ")
+        else:
+            userName = ""
+    key = load_key()
+    f = Fernet(key)
 
     encodedPW = passwd.encode()
     enryptedPasswd = f.encrypt(encodedPW).decode()
 
     pw = f.decrypt(enryptedPasswd.encode())
-    print(pw)
 
-    print()
-    fileName = input("Specify name of password file: ")
+    if fileName == "":
+        print()
+        fileName = input("Specify name of password file: ")
 
     applications[appName] = {"username": userName, "password": passwd}
     values = [appName, userName, enryptedPasswd]

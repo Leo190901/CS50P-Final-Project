@@ -34,7 +34,8 @@ def test_get_passwd_specifications2():
 
 
 def test_wipe():
-    assert bool(wipe()) == False
+    create_new_passwd("instagram", "+example123+", "leon", "test.csv")
+    assert bool(wipe('test.csv', "y")) == False
 
 
 def test_load_passwd():

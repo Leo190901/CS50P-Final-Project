@@ -10,16 +10,15 @@ applications = {}
 
 def main():
     random.seed()
+
     if not os.path.exists("secret.key") or os.stat("secret.key").st_size == 0:
         generate_key()
     else:
         pass
-    global key
-    key = load_key()
-    global f
-    f = Fernet(key)
+
     display_start_screen()
     display_options()
+
     while True:
         # display_options()
         action = input("What would you like to do? ")
@@ -35,6 +34,9 @@ def main():
                 wipe()
             case 'q':
                 sys.exit()
+            case other:
+                print("Invalid selection.")
+                print()
 
 
 def display_start_screen():
@@ -58,6 +60,7 @@ def display_options():
 def load_passwords(fileName=""):
     key = load_key()
     f = Fernet(key)
+
     if fileName == "":
         print()
         fileName = input(
@@ -95,9 +98,14 @@ def load_key():
 
 
 def display_passwords():
-    col_names = ["App", "Username", "Password"]
-    values = [[name, *inner.values()] for name, inner in applications.items()]
-    print(tabulate(values, headers=col_names, tablefmt="grid", showindex="always"))
+    try:
+        col_names = ["App", "Username", "Password"]
+        values = [[name, *inner.values()]
+                  for name, inner in applications.items()]
+        print(tabulate(values, headers=col_names,
+              tablefmt="grid", showindex="always"))
+    except:
+        print("Error: Unable to display passwords")
 
 
 def create_new_passwd(appName="", passwd="", userName="", fileName=""):
@@ -124,20 +132,24 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
     key = load_key()
     f = Fernet(key)
 
-    encodedPW = passwd.encode()
-    enryptedPasswd = f.encrypt(encodedPW).decode()
+    try:
+        encodedPW = passwd.encode()
+        enryptedPasswd = f.encrypt(encodedPW).decode()
+    except:
+        print("Error: Could not encrypt password")
 
-    pw = f.decrypt(enryptedPasswd.encode())
+    try:
+        if fileName == "":
+            print()
+            fileName = input("Specify name of password file: ")
 
-    if fileName == "":
-        print()
-        fileName = input("Specify name of password file: ")
-
-    applications[appName] = {"username": userName, "password": passwd}
-    values = [appName, userName, enryptedPasswd]
-    with open(fileName, 'a',  newline='\n', encoding='utf-8') as csvfile:
-        writer = csv.writer(csvfile)
-        writer.writerow(values)
+        applications[appName] = {"username": userName, "password": passwd}
+        values = [appName, userName, enryptedPasswd]
+        with open(fileName, 'a',  newline='\n', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(values)
+    except:
+        print("Error: Could not store password in specified file")
 
 
 def get_passwd_specifications(answers):
@@ -232,11 +244,20 @@ def generate_random_password(specs):
     return passwd
 
 
-def wipe():
-    with open('passwords.csv', 'w',  newline='\n', encoding='utf-8') as csvfile:
+def wipe(fileName="", ans=""):
+    if fileName == "":
+        fileName = input("What is the name of the file that you want to wipe?")
+
+    with open(fileName, 'w',  newline='\n', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow('')
     applications.clear()
+
+    if ans == "":
+        ans = input("Dou you also want to delete the file?[y/n] ")
+
+    if ans == "y":
+        os.remove(fileName)
 
     return applications
 

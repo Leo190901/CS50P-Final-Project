@@ -20,7 +20,6 @@ def main():
     display_options()
 
     while True:
-        # display_options()
         action = input("What would you like to do? ")
         print()
         match action:

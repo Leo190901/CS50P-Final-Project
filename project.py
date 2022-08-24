@@ -128,6 +128,7 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
             userName = input("Enter username: ")
         else:
             userName = ""
+
     key = load_key()
     f = Fernet(key)
 

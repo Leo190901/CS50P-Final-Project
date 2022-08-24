@@ -50,3 +50,23 @@
 ### display_passwords()
 
     This function uses the tabulate module in order to display the name of the application, the username and the password in tabular format.
+
+### create_new_passwd(appName="", passwd="", userName="", fileName="")
+
+    This function is used to create new password and store them in the applications dict and the specified file. It can take 4 optional arguments only for test_project.py program, the default values of those arguments are all set to the empty string and are to be specified by the user in the normal execution (meaning not for testing) of the program. The user is first asked to enter the name of the application for which he wants to store a password. Afterwards he has the choice to either manually enter a password or have one randomly created for him. If he chooses the latter he is asked for specifications for his random password through the get_passwd_specifications() function, then thos specifications are passed to the generate_random_password() function and the thereby created password is stored in a variable named passwd. In the former case the user is simply asked to enter a password. After that the user is asked wheter he would like to specify a username for that password. If so he is prompted to enter that username. Then the password first gets encoded and then encrypted. In the next step do user gets asked for a filename in which to store his data, then his entries are first stored in a dictionary, and after with the help of a csv writer are stored in the by him specified csv file.
+
+### get_passwd_specifications(answers)
+
+    This function is used in the case that the user wants to have a random password generated for him. It again can take a argument only for the sake of testing. The user is asked for 5 specifications: wheter he wants numbers, whether he wants lowercase letters, uppercase letters, special characters and the length of the password. Here a maximal length of 100 characters has been arbitrarily chosen, since in any case 100 random characters should be secure enough. This function then returns a dictionary containing those specifications. 
+
+### print_specs(specs)
+
+    This function prints the specifications specified in the get_passwd_specifications() function.
+
+### generate_random_password(specs)
+
+    In the case that the user wants a random password to be created for him this function accomplishes just that. The specifications from the get_passwd_specifications() are used here. Four lists are created here: one for alle the lowercase letters, one for all the uppercase letters, one for all the digits and one for a selection of special characters. Then only those lists which were specified are put into another list called "apply". Then a for loop with the number of iterations of the desired length of the password is run. For each iteration a random choice (with the help of pythons random module) is made from the lists in the apply list. Then a random choice is made between the elements in that list. This randomly chosen character is then added to the initially empty "passwd" string. At the end the passwd variable is returned.
+
+### wipe(fileName="", ans="")
+
+    This function is used to wipe all the information from a specified file (and in any case also the information contained in the applications dictionary). It again only takes arguments for testing. First the user is asked for the filename. Then this will will be opened an cleared, afterwards the applications dictionary will be completely cleared. Then the user is also given the option to delete the specified file. The for testing purposes only the applications dict is returned.

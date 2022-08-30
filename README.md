@@ -1,6 +1,6 @@
 # Command Line Password Manager
 
-## Video Demo
+## Video Demo <https://youtu.be/ikbL5AcKdZA>
 
 ## Description
 

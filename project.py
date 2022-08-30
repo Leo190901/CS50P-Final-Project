@@ -1,4 +1,5 @@
 import random
+import time
 import sys
 import csv
 import os
@@ -25,6 +26,7 @@ def main():
             case '1':
                 clear_view()
                 load_passwords()
+                time.sleep(3)
                 clear_view()
             case '2':
                 clear_view()
@@ -98,10 +100,13 @@ def load_passwords(fileName=""):
                 applications[row[0]]["password"] = pw
                 i += 1
             if i == 1:
+                print()
                 print(f"Loaded {i} entry.")
             else:
+                print()
                 print(f"Loaded {i} entries.")
     except:
+        print()
         print("Error: Could not load passwords.")
 
     return applications
@@ -136,19 +141,29 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
 
     if passwd == "":
         if input("Would you like to enter a password manually?[y/n] ").lower() == "y":
+            print()
             passwd = input("Enter Password: ")
         else:
+            print()
             specs = get_passwd_specifications()
             print()
             print_specs(specs)
             print()
             passwd = generate_random_password(specs)
 
+    print()
+
     if userName == "":
         if input("Would you like to specify a username for this password?[y/n]").lower() == "y":
+            print()
             userName = input("Enter username: ")
         else:
             userName = ""
+
+    print()
+
+    if input("Would you like to generate a new secret key?(All passwords within a file need to be encrypted with the same secret key)[y/n] ") == 'y':
+        generate_key()
 
     key = load_key()
     f = Fernet(key)
@@ -157,6 +172,7 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
         encodedPW = passwd.encode()
         enryptedPasswd = f.encrypt(encodedPW).decode()
     except:
+        print()
         print("Error: Could not encrypt password")
 
     try:

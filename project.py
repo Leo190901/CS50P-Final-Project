@@ -16,26 +16,47 @@ def main():
     else:
         pass
 
-    display_start_screen()
-    display_options()
-
     while True:
+        display_start_screen()
+        display_options()
         action = input("What would you like to do? ")
         print()
         match action:
             case '1':
+                clear_view()
                 load_passwords()
+                clear_view()
             case '2':
+                clear_view()
                 display_passwords()
+                while True:
+                    if input("Press [q] to exit view.") == 'q':
+                        clear_view()
+                        break
+                    else:
+                        clear_view()
+                        display_passwords()
+                        pass
             case '3':
+                clear_view()
                 create_new_passwd()
+                clear_view()
             case '4':
+                clear_view()
                 wipe()
+                clear_view()
             case 'q':
+                clear_view()
                 sys.exit()
             case other:
                 print("Invalid selection.")
                 print()
+                clear_view()
+
+
+def clear_view():
+    os.system('clear')
+    os.system('cls')
 
 
 def display_start_screen():

@@ -1,4 +1,4 @@
-# Password Manager
+# Command Line Password Manager
 
 ## Video Demo
 
@@ -45,7 +45,7 @@
 
 ### load_key()
 
-    This function loads the key from the secret.key file. It return this key.
+    This function loads the key from the secret.key file. Here it is important that the secret.key file is in the same directory as the program. It returns the key.
 
 ### display_passwords()
 
@@ -70,3 +70,7 @@
 ### wipe(fileName="", ans="")
 
     This function is used to wipe all the information from a specified file (and in any case also the information contained in the applications dictionary). It again only takes arguments for testing. First the user is asked for the filename. Then this will will be opened an cleared, afterwards the applications dictionary will be completely cleared. Then the user is also given the option to delete the specified file. The for testing purposes only the applications dict is returned.
+
+### clear_view()
+
+    This function simply clears the view that the user is currently seeing. It does that in a windows shell as well as in a unix based shell.

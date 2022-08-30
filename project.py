@@ -162,9 +162,6 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
 
     print()
 
-    if input("Would you like to generate a new secret key?(All passwords within a file need to be encrypted with the same secret key)[y/n] ") == 'y':
-        generate_key()
-
     key = load_key()
     f = Fernet(key)
 
@@ -189,7 +186,7 @@ def create_new_passwd(appName="", passwd="", userName="", fileName=""):
         print("Error: Could not store password in specified file")
 
 
-def get_passwd_specifications(answers):
+def get_passwd_specifications(answers=[]):
     specs = {}
 
     if not answers:
